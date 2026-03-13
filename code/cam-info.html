@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Virtual Museum</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #1d110c;
+            --gold2: #c4873a;
+        }
+
+        html, body {
+            min-height: 100%;
+        }
+
+        body {
+            background: linear-gradient(
+                to right,
+                rgba(0,0,0,0.3) 0%,
+                rgba(0,0,0,0.2) 15%,
+                rgba(0,0,0,0.1) 30%,
+                rgba(255,255,255,0.03) 50%,
+                rgba(0,0,0,0.1) 70%,
+                rgba(0,0,0,0.2) 85%,
+                rgba(0,0,0,0.3) 100%
+            ),
+            #1d110c;
+            color: #fff8f0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* ── NAVBAR ─────────────────────────────── */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 40px;
+            border-bottom: 1px solid #ffffff18;
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 80;
+        }
+
+        .navbar-logo {
+            font-family: 'DM Mono', monospace;
+            font-size: .85rem;
+            letter-spacing: 1em;
+            color: #fff8f0;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 2.2rem;
+            list-style: none;
+        }
+
+        .navbar-links a {
+            font-family: 'DM Mono', monospace;
+            font-size: .6rem;
+            letter-spacing: .3em;
+            color: rgba(255,248,240,.45);
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: color .3s;
+        }
+
+        .navbar-links a:hover {
+            color: var(--gold2);
+        }
+
+        @media (max-width: 720px) {
+            .navbar-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="#" class="navbar-logo">OBSCURA</a>
+        <ul class="navbar-links">
+            <li><a href="#">Timeline</a></li>
+            <li><a href="#">Try Camera</a></li>
+            <li><a href="#">Camera Anatomy</a></li>
+        </ul>
+    </nav>
+
+</body>
+</html>
