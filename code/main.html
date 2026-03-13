@@ -1,70 +1,539 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Camera Virtual Museum</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background-color: #1d110c;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 40px;
-            border-bottom: 1px solid #ffffff4f;
-            position: relative;
-            flex-shrink: 0;
-        }
-        .navbar-left {
-            font-size: 18px;
-            color: #fff8f0;
-        }
-        .navbar-center {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 18px;
-            color: #fff8f0;
-        }
-        .content-wrapper {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .text-center {
-            color: white;
-            font-size: 48px;
-            text-align: center;
-            font-family: 'Playfair Display', sans-serif;
-        }
-    </style>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Cormorant+Garamond:wght@300;400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --image-border-radius: 8px;
+  --gold:  #a0681a;
+  --gold2: #c4873a;
+  --sepia: #bc9976;
+  --bg:    #1d110c;
+}
+
+body {
+  background: var(--bg);
+  font-family: 'Cormorant Garamond', serif;
+  color: #fff8f0;
+}
+
+/* ── NAVBAR ─────────────────────────────── */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px;
+  border-bottom: 1px solid #ffffff18;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 100;
+}
+.navbar-logo {
+  font-family: 'DM Mono', monospace;
+  font-size: .85rem;
+  letter-spacing: 1em;
+  color: #fff8f0;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.navbar-links {
+  display: flex;
+  gap: 2.2rem;
+  list-style: none;
+}
+.navbar-links a {
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: .3em;
+  color: rgba(255,248,240,.45);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color .3s;
+}
+.navbar-links a:hover { color: var(--gold2); }
+
+/* ── HERO ───────────────────────────────── */
+.hero-section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem;
+  letter-spacing: .55em;
+  color: var(--gold2);
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fadeUp .7s .2s forwards;
+}
+
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -.02em;
+  opacity: 0;
+  animation: fadeUp .8s .4s forwards;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--gold2);
+}
+
+.hero-divider {
+  width: 1px;
+  height: 60px;
+  background: linear-gradient(to bottom, var(--gold2), transparent);
+  margin: 2.2rem auto;
+  opacity: 0;
+  animation: fadeUp .7s .65s forwards;
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  font-weight: 300;
+  color: rgba(255,248,240,.5);
+  max-width: 520px;
+  line-height: 1.2;
+  opacity: 0;
+  animation: fadeUp .7s .85s forwards;
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  opacity: 0;
+  animation: fadeUp .7s 1.2s forwards;
+}
+.hero-scroll span {
+  font-family: 'DM Mono', monospace;
+  font-size: .55rem;
+  letter-spacing: .4em;
+  color: rgba(255,248,240,.28);
+  text-transform: uppercase;
+}
+.scroll-bar {
+  width: 1px;
+  height: 44px;
+  background: linear-gradient(to bottom, var(--gold2), transparent);
+  animation: scrollPulse 2s infinite;
+}
+
+/* ── GALLERY SECTION ────────────────────── */
+.gallery-section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px 80px;
+}
+
+/* ── GALLERY ROW ────────────────────────── */
+.gallery-container {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  margin-bottom: 28px;
+}
+
+/* ── ŠIPKY ──────────────────────────────── */
+.arr-btn {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border: 1px solid rgba(160, 104, 26, .35);
+  background: rgba(29, 17, 12, .7);
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color .3s, background .3s, transform .2s;
+}
+.arr-btn:hover {
+  border-color: var(--gold2);
+  background: rgba(160, 104, 26, .15);
+  transform: scale(1.1);
+}
+.arr-btn:active { transform: scale(.93); }
+.arr-btn svg {
+  width: 26px;
+  height: 26px;
+  stroke: var(--gold2);
+  fill: none;
+  stroke-width: 1.8;
+}
+.arr-btn:disabled {
+  opacity: .22;
+  pointer-events: none;
+}
+
+/* ── OBRÁZEK ────────────────────────────── */
+.image-wrapper {
+  width: 500px;
+  height: 500px;
+  background: #2a1a0f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--image-border-radius);
+  box-shadow: 0 10px 40px rgba(0,0,0,.6);
+  cursor: pointer;
+  transition: transform .4s cubic-bezier(.23,1,.32,1), box-shadow .4s ease;
+  position: relative;
+  overflow: hidden;
+}
+.image-wrapper:hover {
+  transform: scale(1.05) translateY(-4px);
+  box-shadow:
+    0 0 0 1px rgba(160,104,26,.3),
+    0 24px 60px rgba(0,0,0,.85),
+    0 0 50px rgba(160,104,26,.1);
+}
+.image-wrapper img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.image-placeholder {
+  color: #555;
+  font-size: 18px;
+  font-family: 'DM Mono', monospace;
+}
+
+/* slide animace */
+.image-wrapper.slide-out-left  { animation: slideOutLeft  .22s ease forwards; }
+.image-wrapper.slide-out-right { animation: slideOutRight .22s ease forwards; }
+.image-wrapper.slide-in-left   { animation: slideInLeft   .3s  ease forwards; }
+.image-wrapper.slide-in-right  { animation: slideInRight  .3s  ease forwards; }
+
+@keyframes slideOutLeft  { to { opacity:0; transform:translateX(-40px); } }
+@keyframes slideOutRight { to { opacity:0; transform:translateX(40px);  } }
+@keyframes slideInLeft   { from { opacity:0; transform:translateX(40px);  } to { opacity:1; transform:translateX(0); } }
+@keyframes slideInRight  { from { opacity:0; transform:translateX(-40px); } to { opacity:1; transform:translateX(0); } }
+
+/* ── INFO POD OBRÁZKEM ──────────────────── */
+.photo-info {
+  margin-bottom: 60px;
+  text-align: center;
+}
+.photo-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: .4rem;
+  letter-spacing: -0.03em;
+}
+.photo-year-label {
+  font-family: 'DM Mono', monospace;
+  font-size: .75rem;
+  letter-spacing: .3em;
+  color: var(--gold2);
+  text-transform: uppercase;
+  min-height: 1.2em;
+}
+.photo-counter {
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem;
+  letter-spacing: 1em;
+  color: rgba(188,153,118,.4);
+  margin-top: .5rem;
+}
+.photo-counter b { color: var(--gold2); font-size: .8rem; }
+
+/* ── TIMELINE ───────────────────────────── */
+.tl-outer {
+  width: 100%;
+  max-width: 760px;
+  padding: 40px 20px 0;
+}
+
+.tl-track {
+  position: relative;
+  height: 3px;
+  background: rgba(188,153,118,.15);
+  border-radius: 2px;
+}
+
+.tl-fill {
+  position: absolute;
+  top: 0; left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+  border-radius: 2px;
+  transition: width .5s cubic-bezier(.25,.46,.45,.94);
+}
+
+.tl-dots-row {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  top: 50%; left: 0; right: 0;
+  transform: translateY(-50%);
+}
+
+.tl-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(188,153,118,.3);
+  background: var(--bg);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: border-color .3s, transform .3s, background .3s, box-shadow .3s;
+}
+
+/* rok — vždy viditelný nad tečkou */
+.tl-dot::after {
+  content: attr(data-year);
+  position: absolute;
+  bottom: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'DM Mono', monospace;
+  font-size: .75rem;
+  letter-spacing: .05em;
+  color: rgba(188,153,118,.45);
+  white-space: nowrap;
+  pointer-events: none;
+  transition: color .3s;
+}
+
+.tl-dot.on::after    { color: var(--gold2); }
+.tl-dot:hover::after { color: var(--sepia); }
+
+.tl-dot.on {
+  border-color: var(--gold2);
+  background: var(--gold2);
+  transform: scale(1.85);
+  box-shadow: 0 0 16px rgba(196,135,58,.5);
+}
+.tl-dot:not(.on):hover {
+  border-color: var(--sepia);
+  background: rgba(188,153,118,.25);
+  transform: scale(1.4);
+}
+
+/* ── ANIMACE ────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: .4; transform: scaleY(1); }
+  50%       { opacity: 1;  transform: scaleY(1.15); }
+}
+
+/* ── RESPONSIVE ─────────────────────────── */
+@media (max-width: 720px) {
+  .image-wrapper { width: 80vw; height: 80vw; }
+  .arr-btn { width: 54px; height: 54px; }
+  .arr-btn svg { width: 20px; height: 20px; }
+  .gallery-container { gap: 16px; }
+  .navbar-links { display: none; }
+  .tl-dot::after { font-size: .62rem; }
+}
+@media (max-width: 480px) {
+  .image-wrapper { width: 72vw; height: 72vw; }
+  .arr-btn { width: 44px; height: 44px; }
+  .gallery-container { gap: 10px; }
+  .tl-outer { padding: 36px 8px 0; }
+  .tl-dot { width: 10px; height: 10px; }
+  .tl-dot::after { font-size: .55rem; bottom: calc(100% + 10px); }
+}
+
+</style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-left">
-            <!-- Text vlevo nahoře -->
-        </div>
-        <div class="navbar-center">
-            <!-- Text doprostřed nahoře -->
-        </div>
-    </nav>
-    
-    <div class="content-wrapper">
-        <div class="text-center">
-            CAMERA VIRTUAL MUSEUM
-        </div>
+
+<!-- NAVBAR — logo vlevo, linky hned vedle vlevo -->
+<nav class="navbar">
+  <a href="#" class="navbar-logo">OBSCURA</a>
+  <ul class="navbar-links">
+    <li><a href="#">Timeline</a></li>
+    <li><a href="#">Try Camera</a></li>
+    <li><a href="#">Camera Anatomy</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero-section">
+  <p class="hero-eyebrow">A Digital Museum Experience</p>
+  <h1 class="hero-title">Camera<br><em>Virtual Museum</em></h1>
+  <p class="hero-subtitle">
+    Journey through five centuries of optical innovation —
+    from the first pinhole chambers to today's computational photography.
+  </p>
+  <div class="hero-scroll">
+    <div class="scroll-bar"></div>
+  </div>
+</div>
+
+<!-- GALLERY -->
+<div class="gallery-section">
+
+  <div class="gallery-container">
+
+    <button class="arr-btn" id="prevBtn" aria-label="Previous">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+
+    <div class="image-wrapper" id="imageWrapper" onclick="openPhotoLink()">
+      <div id="photoImage" class="image-placeholder">[Fotka 1]</div>
     </div>
+
+    <button class="arr-btn" id="nextBtn" aria-label="Next">
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+
+  </div>
+
+  <div class="photo-info">
+    <div class="photo-name"       id="photoName">Fotografie 1</div>
+    <div class="photo-year-label" id="photoYear"></div>
+    <div class="photo-counter"><b id="photoIdx">1</b> / 9</div>
+  </div>
+
+  <div class="tl-outer">
+    <div class="tl-track">
+      <div class="tl-fill"     id="tlFill"></div>
+      <div class="tl-dots-row" id="tlDots"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+const photos = [
+  { name:'Fotografie 1', image:'[Fotka 1]', year:'1550', link:'https://example.com/1' },
+  { name:'Fotografie 2', image:'[Fotka 2]', year:'1839', link:'https://example.com/2' },
+  { name:'Fotografie 3', image:'[Fotka 3]', year:'1888', link:'https://example.com/3' },
+  { name:'Fotografie 4', image:'[Fotka 4]', year:'1925', link:'https://example.com/4' },
+  { name:'Fotografie 5', image:'[Fotka 5]', year:'1948', link:'https://example.com/5' },
+  { name:'Fotografie 6', image:'[Fotka 6]', year:'1959', link:'https://example.com/6' },
+  { name:'Fotografie 7', image:'[Fotka 7]', year:'1987', link:'https://example.com/7' },
+  { name:'Fotografie 8', image:'[Fotka 8]', year:'2007', link:'https://example.com/8' },
+  { name:'Fotografie 9', image:'[Fotka 9]', year:'2023', link:'https://example.com/9' },
+];
+
+let currentIndex = 0;
+let animating    = false;
+
+function buildTimeline() {
+  const row = document.getElementById('tlDots');
+  row.innerHTML = '';
+  photos.forEach((p, i) => {
+    const d = document.createElement('div');
+    d.className    = 'tl-dot' + (i === 0 ? ' on' : '');
+    d.dataset.year = p.year;
+    d.addEventListener('click', () => goTo(i, i > currentIndex ? 'next' : 'prev'));
+    row.appendChild(d);
+  });
+}
+
+function updateUI() {
+  const p = photos[currentIndex];
+
+  document.getElementById('photoName').textContent = p.name;
+  document.getElementById('photoYear').textContent = p.year || '';
+  document.getElementById('photoIdx').textContent  = currentIndex + 1;
+
+  const imgDiv = document.getElementById('photoImage');
+  if (p.image && p.image.startsWith('http')) {
+    imgDiv.innerHTML = `<img src="${p.image}" alt="${p.name}">`;
+    imgDiv.className = '';
+  } else {
+    imgDiv.innerHTML   = '';
+    imgDiv.textContent = p.image;
+    imgDiv.className   = 'image-placeholder';
+  }
+
+  const pct = photos.length > 1 ? (currentIndex / (photos.length - 1)) * 100 : 0;
+  document.getElementById('tlFill').style.width = pct + '%';
+
+  document.querySelectorAll('.tl-dot').forEach((d, i) =>
+    d.classList.toggle('on', i === currentIndex)
+  );
+
+  document.getElementById('prevBtn').disabled = currentIndex === 0;
+  document.getElementById('nextBtn').disabled = currentIndex === photos.length - 1;
+}
+
+function goTo(newIndex, dir) {
+  if (animating || newIndex === currentIndex) return;
+  animating = true;
+
+  const wrapper = document.getElementById('imageWrapper');
+  wrapper.classList.add(dir === 'next' ? 'slide-out-left' : 'slide-out-right');
+
+  setTimeout(() => {
+    wrapper.classList.remove('slide-out-left', 'slide-out-right');
+    currentIndex = newIndex;
+    updateUI();
+    wrapper.classList.add(dir === 'next' ? 'slide-in-left' : 'slide-in-right');
+    setTimeout(() => {
+      wrapper.classList.remove('slide-in-left', 'slide-in-right');
+      animating = false;
+    }, 300);
+  }, 220);
+}
+
+document.getElementById('prevBtn').addEventListener('click', () => {
+  if (currentIndex > 0) goTo(currentIndex - 1, 'prev');
+});
+document.getElementById('nextBtn').addEventListener('click', () => {
+  if (currentIndex < photos.length - 1) goTo(currentIndex + 1, 'next');
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' && currentIndex < photos.length - 1) goTo(currentIndex + 1, 'next');
+  if (e.key === 'ArrowLeft'  && currentIndex > 0)                  goTo(currentIndex - 1, 'prev');
+});
+
+function openPhotoLink() {
+  const p = photos[currentIndex];
+  if (p.link) window.open(p.link, '_blank');
+}
+
+buildTimeline();
+updateUI();
+
+</script>
 </body>
 </html>
